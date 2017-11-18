@@ -1,0 +1,45 @@
+.carousel-container{
+    position: relative;
+}
+.carousel-item{
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.carousel-item.active{
+    visibility: visible;
+}
+.carousel-item.active .carousel-handle{
+    background: rgba(255,255,255,.5);
+}
+.carousel-content{
+    height: inherit;
+    width: inherit;
+}
+.carousel-handle{
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    bottom: 12px;
+    background: rgba(0,0,0,.2);
+    visibility: hidden;
+    z-index: 1;
+}
+.carousel-handle::before{
+    content: "";
+    height: inherit;
+    width: inherit;
+    border-radius: 50%;
+    margin-left: -50%;
+    display: inline-block;
+    visibility: visible;
+    cursor: pointer;
+    /* 继承一下父元素的一些属性 */
+    background: inherit;
+    border: inherit;
+    box-shadow: inherit;
+    outline: inherit;
+}
