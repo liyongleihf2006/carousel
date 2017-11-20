@@ -51,6 +51,13 @@ function carousel(container,snaps,interval){
             currentIdx=idx;
             doCheck();
         });
+        /*  为什么不用伪元素?
+         *  因为我测试发现ie有个bug,当元素visibility: hidden时，
+         *  其伪元素设置visibility: visible;是不起作用的，加上important也不行
+         */
+        var carouselHandleBefore=document.createElement("div");
+        carouselHandle.appendChild(carouselHandleBefore);
+        carouselHandleBefore.setAttribute("class","carousel-handle-before");
     });
     setInterval(function(){
         if(suspend){return};

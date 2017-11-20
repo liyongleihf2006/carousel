@@ -28,8 +28,7 @@
     visibility: hidden;
     z-index: 1;
 }
-.carousel-handle::before{
-    content: "";
+.carousel-handle-before{
     height: inherit;
     width: inherit;
     border-radius: 50%;
