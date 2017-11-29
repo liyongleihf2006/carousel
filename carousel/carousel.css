@@ -36,9 +36,25 @@
     display: inline-block;
     visibility: visible;
     cursor: pointer;
+    text-align: center;
     /* 继承一下父元素的一些属性 */
     background: inherit;
     border: inherit;
     box-shadow: inherit;
     outline: inherit;
+}
+/* 下面是支持计数 */
+.carousel-show-no{
+    counter-reset: carousel-show-no;
+}
+.carousel-show-no .carousel-item{
+    counter-increment: carousel-show-no;
+}
+.carousel-show-no .carousel-handle-before::before{
+    content: counter(carousel-show-no);
+    color:rgba(255,255,255,.4);
+}
+.carousel-show-no .carousel-item.active .carousel-handle-before::before{
+    content: counter(carousel-show-no);
+    color:rgba(0,0,0,.6);
 }

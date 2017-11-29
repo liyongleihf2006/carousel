@@ -35,7 +35,13 @@
     <script>
         var container = document.querySelector("#container");
         var snaps = [demoSnap(),demoSnap(),demoSnap(),demoSnap()];
-        carousel(container,snaps,1000);
+        carousel({container:container,
+                  snaps:snaps,
+                  interval:1000,
+                  space:36,
+                  circleSize:24,
+                  showNo:true  
+                });
         function demoSnap(){
             var snap = document.createElement("div");
             snap.setAttribute("class","demo-snap");
