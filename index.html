@@ -7,44 +7,122 @@
     <link rel="stylesheet" href="./carousel//carousel.css">
     <style>
         .carousel-container{
-            height: 200px;
-            width: 200px;
+            height: 300px;
+            width: 485px;
             border:1px solid;
         }
         .demo-snap{
             height: inherit;
             width: inherit;
+            position: relative;
         }
-        .carousel-item:nth-child(1) .demo-snap{
-            background: rgb(254,67,101);
+        .demo-image{
+            position: absolute;
+            margin: auto;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 100%;
+            max-width: 100%;
         }
-        .carousel-item:nth-child(2) .demo-snap{
-            background: rgb(252,157,154);
+        .demo-desc{
+            position: relative;
+            padding:4px 10px;
         }
-        .carousel-item:nth-child(3) .demo-snap{
-            background: rgb(249,205,173);
+        .demo-bright-handle.carousel-handle{
+            background: rgba(255,255,255,.2);
+            color:rgba(255,255,255,.5);
         }
-        .carousel-item:nth-child(4) .demo-snap{
-            background: rgb(131,175,155);
+        .carousel-item.active .demo-bright-handle.carousel-handle {
+            background: rgba(255,255,255,.5);
+            color:rgba(255,255,255,1);
+        }
+        .demo-dark-handle.carousel-handle{
+            background: rgba(0,0,0,.2);
+            color:rgba(0,0,0,.5);
+        }
+        .carousel-item.active .demo-dark-handle.carousel-handle{
+            background: rgba(0,0,0,.5);
+            color:rgba(0,0,0,1);
         }
     </style>
 </head>
 <body>
     <div id="container"></div>
+    <!-- 获取图片颜色平均值以及亮度的插件 -->
+    <script src="https://liyongleihf2006.github.io/getImageMeanColor/getImageMeanColor.js"></script>
     <script src="./carousel/carousel.js"></script>
     <script>
         var container = document.querySelector("#container");
-        var snaps = [demoSnap(),demoSnap(),demoSnap(),demoSnap()];
+        var snaps = [];
+        for(var i = 0;i<9;i++){
+            snaps.push(demoSnap(i));
+        }
+
         carousel({container:container,
                   snaps:snaps,
-                  interval:1000,
+                  interval:1500,
                   space:36,
                   circleSize:24,
-                  showNo:true  
+                  showNo:true,
+                  onActive:function(snap,idx,snaps){
+                      /* this是container */
+                      var _this = this;
+                      var src=snap.querySelector("img").src;
+                      /* 获取图片颜色的平均值以及亮度,具体可以参见:https://github.com/liyongleihf2006/getImageMeanColor */
+                      getImageMeanColor({
+                        imageUrl:src,
+                        cb:function(color){
+                            /* 将快照的背景设置为快照中图片的颜色平均值 */
+                            snap.style.backgroundColor = color;
+                        }
+                      })
+                      /* 获取图片颜色的平均值以及亮度,具体可以参见:https://github.com/liyongleihf2006/getImageMeanColor */
+                      getImageMeanColor({
+                        imageUrl:src,
+                        /* 获取图片下半部分20%高度的颜色平均值 */
+                        skewPosition:"bottom",
+                        clipHeight:".2",
+                        cb:function(color,l,r,g,b,a){
+                            /* 按照图片下半部分20%高度的亮度来决定下面圆点选择符的背景色和字体颜色 */
+                            [].forEach.call(_this.querySelectorAll(".carousel-handle"),function(handle){
+                                handle.setAttribute("class",function(){
+                                    var cls = "carousel-handle ";
+                                    cls+=l>.5?"demo-dark-handle":"demo-bright-handle";
+                                    return cls;
+                                }());
+                            });
+                        }
+                      })
+                      /* 获取图片颜色的平均值以及亮度,具体可以参见:https://github.com/liyongleihf2006/getImageMeanColor */
+                      getImageMeanColor({
+                        imageUrl:src,
+                        /* 获取图片上半部分30%高度的颜色平均值 */
+                        skewPosition:"top",
+                        clipHeight:".3",
+                        cb:function(color,l,r,g,b,a){
+                            /* 按照图片下半部分20%高度的平均颜色的反色来为说明文字极其背景来赋予颜色 */
+                            var fontColor = "rgba("+(255-r)+","+(255-g)+","+(255-b)+",1)";
+                            var bgColor = "rgba("+(255-r)+","+(255-g)+","+(255-b)+",.3)";
+                            snap.querySelector(".demo-desc").style.color=fontColor;
+                            snap.querySelector(".demo-desc").style.backgroundColor=bgColor;
+                        }
+                      })
+                  }  
                 });
-        function demoSnap(){
+        function demoSnap(i){
             var snap = document.createElement("div");
             snap.setAttribute("class","demo-snap");
+            var image = new Image();
+            image.setAttribute("class","demo-image");
+            image.setAttribute("src","./image/image_"+i+".jpg");
+            snap.appendChild(image);
+            var desc = document.createElement("div");
+            desc.setAttribute("class","demo-desc");
+            desc.innerHTML = "这是对下面的图片的一个描述,当前的图片是第"+i+"张图片,"+
+            "文字的颜色跟图片的颜色正好是hsl中的180旋转,背景也是，但背景的颜色透明度是.3";
+            snap.appendChild(desc);
             return snap;
         }
     </script>

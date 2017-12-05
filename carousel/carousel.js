@@ -8,6 +8,10 @@
  *         space:number default:24 小圆点偏移的像素大小
  *         circleSize default:12 小圆点的大小,默认是12px,是在css中设置的,这里设置了可以覆盖css中的设置
  *         showNo:boolean default:true 是否显示小圆点上面的计数
+ *         onActive:function(snap,idx,snaps) 每个快照被激活后的事件
+ *                           snap 被激活的快照
+ *                           idx 被激活的快照的次序
+ *                           snaps 所有的快照
  *       }
  */
 function carousel(params){
@@ -23,6 +27,8 @@ function carousel(params){
     var circleSize = params.circleSize;
     /* 是否显示小圆点上面的计数 */
     var showNo = params.showNo===undefined?true:params.showNo;
+    /* 每个快照被激活后的事件 */
+    var onActive = params.onActive||function(container,snap,idx,snaps){};
     /* 暂停的标志,当鼠标悬浮该组件的时候就会暂停 */
     var suspend = false;
     /* 当前显示的快照在数组中的位置 */
@@ -53,6 +59,7 @@ function carousel(params){
         container.appendChild(carouselItem);
         if(!idx){
             carouselItem.setAttribute("class","carousel-item active");
+            onActive.call(container,snap,idx,snaps);
         }else{
             carouselItem.setAttribute("class","carousel-item");
         }
@@ -98,6 +105,7 @@ function carousel(params){
     function doCheck(){
         [].forEach.call(container.querySelectorAll(".carousel-item"),function(item,idx){
             item.setAttribute("class",idx==currentIdx?"carousel-item active":"carousel-item");
-        }) 
+        }); 
+        onActive.call(container,snaps[currentIdx],currentIdx,snaps);
     }
 }

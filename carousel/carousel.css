@@ -27,6 +27,10 @@
     background: rgba(0,0,0,.2);
     visibility: hidden;
     z-index: 1;
+    color:rgba(255,255,255,.4);
+}
+.active .carousel-handle{
+    color:rgba(0,0,0,.6);
 }
 .carousel-handle-before{
     height: inherit;
@@ -52,9 +56,7 @@
 }
 .carousel-show-no .carousel-handle-before::before{
     content: counter(carousel-show-no);
-    color:rgba(255,255,255,.4);
 }
 .carousel-show-no .carousel-item.active .carousel-handle-before::before{
     content: counter(carousel-show-no);
-    color:rgba(0,0,0,.6);
 }
